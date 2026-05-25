@@ -4,74 +4,92 @@
     <meta charset="UTF-8">
     <title>Пошиття спецодягу та трикотажу</title>
     <style>
-    /* Контейнер для карточек */
-    .grid { 
-    display: flex; 
-    justify-content: center; 
-    gap: 30px; 
-    margin-top: 40px; 
-    flex-wrap: wrap; /* Чтобы переносились на новую строку на мобилках */
-    }
-
-    /* Сама карточка (блок с товаром) */
-    .card { 
-       background: #1f2937; 
-       padding: 15px; 
-       border-radius: 15px; 
-       border: 1px solid #374151; 
-       width: 350px; /* <-- ДЕЛАЕМ ШИРЕ! БЫЛО МАЛО */
-       transition: transform 0.3s;
-       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-
-     /* Эффект при наведении */
-    .card:hover { 
-     transform: translateY(-5px); 
-     border-color: #10b981; 
-     box-shadow: 0 10px 15px rgba(0,0,0,0.5);
-    }
-
-     /* КАРТИНКА */
-    img { 
-      border-radius: 8px; 
-      display: block; 
-      margin-bottom: 15px; 
-    
-    /* ВОТ ТУТ МАГИЯ */
-    width: 100%;           /* Занять всю ширину карточки */
-    height: 250px;         /* Фиксированная высота, чтобы все ровно */
-    object-fit: cover;     /* Обрезать лишнее по краям, чтобы не сплющило */
-   }
+        /* Навигация-полоска */
+.nav-bar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 0 0 30px 0;
+    padding: 10px 20px;
+    background: rgba(31, 41, 55, 0.6);
+    border-radius: 12px;
+    border: 1px solid #374151;
+    flex-wrap: wrap;
+}
+.nav-item {
+    color: #d1d5db;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+.nav-item:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-1px);
+}
+.nav-item.active {
+    background: #10b981;
+    color: white;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+        body { background: #111827; color: #f9fafb; font-family: system-ui, sans-serif; text-align: center; padding: 40px; margin: 0; }
+        header { margin-bottom: 40px; }
+        h1 { color: #10b981; font-size: 2.5rem; margin-bottom: 10px; }
+        .subtitle { color: #9ca3af; font-size: 1.2rem; }
+        
+        /* Навигация (кнопка Контакты) */
+        .nav { margin-bottom: 30px; }
+        .nav-btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background: #3b82f6; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            font-weight: 500; 
+            transition: background 0.2s; 
+        }
+        .nav-btn:hover { background: #2563eb; }
+        
+        .grid { display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
+        .card { background: #1f2937; padding: 20px; border-radius: 15px; border: 1px solid #374151; transition: 0.3s; text-decoration: none; color: white; width: 250px; }
+        .card:hover { transform: translateY(-5px); border-color: #10b981; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); }
+        img { border-radius: 8px; display: block; margin-bottom: 15px; width: 100%; height: 180px; object-fit: cover; }
+        .card-title { font-size: 1.3rem; font-weight: bold; color: #f3f4f6; display: block; margin-bottom: 5px; }
+        .card-desc { color: #9ca3af; font-size: 0.9rem; }
+        footer { margin-top: 40px; color: #6b7280; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <header>
+        <nav class="nav-bar">
+            <a href="/" class="nav-item active">Головна</a>
+            <a href="{% url 'contacts:contacts_page' %}" class="nav-item">📬 Контакти</a>
+            <!-- Сюда потом добавишь Каталог, Доставка и т.д. -->
+        </nav>
+        
         <h1>Професійне пошиття на замовлення</h1>
         <p class="subtitle">Якісний спецодяг та повсякденний трикотаж від виробника</p>
-    </header>
-
-    <div class="grid">
+    </header>        
+        <div class="grid">
         {% for cat in categories %}
-        <a href="/page/{{ cat.id }}/" class="card">
-            <img src="{{ cat.image_url|default:'https://picsum.photos/250/180' }}" alt="{{ cat.title }}">
+        <a href="{{ cat.link }}" class="card">
+            <img src="{{ cat.image_url }}" alt="{{ cat.title }}">
             <span class="card-title">{{ cat.title }}</span>
-            <span class="card-desc">{{ cat.description|truncatewords:10 }}</span>
+            <span class="card-desc">{{ cat.description }}</span>
         </a>
         {% empty %}
-            <p style="color: #9ca3af;">Категорій поки що немає. Додайте їх в адмінці!</p>
+        <p style="grid-column: 1/-1; color: #9ca3af;">
+            Категорій поки немає. Додай їх у <a href="/admin/" style="color: #3b82f6;">адмінці</a> 🛠️
+        </p>
         {% endfor %}
-        </div>   
-	<div style="margin-top: 50px; background: #1f2937; padding: 30px; border-radius: 15px; border: 1px solid #374151; max-width: 600px; margin-left: auto; margin-right: auto;">
-        <h2 style="color: #10b981; margin-top: 0;">Зв'язатися з нами</h2>
-        <p style="color: #d1d5db; font-size: 1.1rem; margin-bottom: 20px;">Приймаємо замовлення на оптовий та індивідуальний пошив</p>
-        
-        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; font-size: 1.1rem;">
-            <div>📞 <strong>Телефон:</strong> <a href="tel:+380000000000" style="color: #10b981; text-decoration: none;">+38 (099) 361-42-75; (067) 744-13-34</a></div>
-            <div>💬 <strong>Viber / Telegram:</strong> <span style="color: #f3f4f6;">+38 (099) 361-42-75; +38 (067) 744-13-34 </span></div>
-            <div>📍 <strong>Адреса цеху:</strong> <span style="color: #9ca3af;">Україна, м. Київ, вул. Якова Гнiздовського 1 </span></div>
-        </div>
     </div>
+    </div>   
+    
     <footer>
         <p>© 2026 Швейне Виробництво. Всі права захищені.</p>
     </footer>

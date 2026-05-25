@@ -1,14 +1,16 @@
+# catalog/models.py
 from django.db import models
 
-# Create your models here.
 class Category(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Назва категорії")
-    description = models.TextField(verbose_name="Опис")
-    image_url = models.URLField(verbose_name="Посилання на картинку", blank=True)
-
-    def __str__(self):
-        return self.title
-
+    title = models.CharField("Назва категорії", max_length=100)
+    description = models.TextField("Опис", blank=True, default="")
+    image_url = models.URLField("Посилання на зображення", blank=True, null=True)
+    link = models.CharField("Посилання сторінки", max_length=50, default="/page/1/")
+    
     class Meta:
         verbose_name = "Категорія"
         verbose_name_plural = "Категорії"
+        ordering = ['-id']  # Новые сверху
+
+    def __str__(self):
+        return self.title

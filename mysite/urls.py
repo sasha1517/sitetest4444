@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path
 from django.shortcuts import render, get_object_or_404
+
 # Импортируем нашу модель категорий из созданного приложения catalog
 from catalog.models import Category
+from django.urls import path, include
 
 # 1. Главная страница: вытаскиваем ВСЕ категории из базы
 def home_page(request):
@@ -19,6 +21,8 @@ def test_page(request, num):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('catalog.urls')),
     path('', home_page),
     path('page/<int:num>/', test_page),
+    path('contacts/', include('contacts.urls')), 
 ]
